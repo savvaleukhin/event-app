@@ -14,5 +14,5 @@
     = f.date_select :start_date
   .field
     = f.label :schedule
-    = f.text_area :schedule
+    = f.select_recurring :schedule, nil, :allow_blank => true
   .actions = f.submit
