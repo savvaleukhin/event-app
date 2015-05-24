@@ -1,18 +1,19 @@
-= form_for @event do |f|
-  - if @event.errors.any?
-    #error_explanation
-      h2 = "#{pluralize(@event.errors.count, "error")} prohibited this event from being saved:"
-      ul
-        - @event.errors.full_messages.each do |message|
-          li = message
-
-  .field
-    = f.label :title
-    = f.text_field :title
-  .field
-    = f.label :start_date
-    = f.date_select :start_date
-  .field
-    = f.label :schedule
-    = f.select_recurring :schedule, nil, :allow_blank => true
-  .actions = f.submit
+= form_for @event, html: { class: "form form-horizontal event" } do |f|
+  .form-group
+    = f.label :title, :class => 'control-label'
+    .controls
+      = f.text_field :title, :class => 'form-control'
+    = error_span(@event[:title])
+  .form-group
+    = f.label :start_date, :class => 'control-label'
+    .controls
+      = f.date_select :start_date, :class => 'form-control'
+    = error_span(@event[:start_date])
+  .form-group
+    = f.label :schedule, :class => 'control-label'
+    .controls
+      = f.select_recurring :schedule, nil, :allow_blank => true, :class => 'form-control'
+    = error_span(@event[:schedule])
+  = f.submit nil, :class => 'btn btn-primary'
+  '
+  = link_to t('.cancel', :default => t("helpers.links.cancel")), events_path, :class => 'btn'
