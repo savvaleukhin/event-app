@@ -1,10 +1,10 @@
 require_relative 'acceptance_helper'
 
-feature 'User sign in', %q{
+feature 'User sign in', %q(
   In order to be able to ask questions
   As an user
   I want to be sign in
-} do
+) do
 
   given(:user) { create(:user) }
 
@@ -46,9 +46,21 @@ feature 'Guest sign up', %q{
   Guest wants to sign up
 } do
 
-  scenario 'Guest try to sign up with write details' do
+  scenario 'Guest try to sign up with right details' do
     visit new_user_registration_path
     fill_in 'Email', with: 'user@test.com'
+    fill_in 'Password', with: '12345678'
+    fill_in 'Password confirmation', with: '12345678'
+    click_on 'Sign up'
+
+    expect(page).to have_content 'Welcome! You have signed up successfully.'
+    expect(current_path).to eq root_path
+  end
+
+  scenario 'Guest try to sign up with full details' do
+    visit new_user_registration_path
+    fill_in 'Email', with: 'user@test.com'
+    fill_in 'Name', with: 'User'
     fill_in 'Password', with: '12345678'
     fill_in 'Password confirmation', with: '12345678'
     click_on 'Sign up'
