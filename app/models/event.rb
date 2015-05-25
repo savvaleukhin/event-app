@@ -3,15 +3,17 @@ class Event < ActiveRecord::Base
 
   belongs_to :user
 
-  serialize :schedule, IceCube::Schedule
-
   validates :title, :start_date, :user_id, presence: true
 
-  def schedule=(new_schedule)
-    return unless RecurringSelect.is_valid_rule?(new_schedule)
+  serialize :schedule, Hash
 
+  def schedule=(new_schedule)
+    write_attribute(:schedule, RecurringSelect.dirty_hash_to_rule(new_schedule).to_hash)
+  end
+
+  def converted_schedule
     the_schedule = Schedule.new(self.start_date)
-    the_schedule.add_recurrence_rule(RecurringSelect.dirty_hash_to_rule(new_schedule))
-    write_attribute(:schedule, the_schedule)
+    the_schedule.add_recurrence_rule(RecurringSelect.dirty_hash_to_rule(self.schedule))
+    the_schedule
   end
 end
