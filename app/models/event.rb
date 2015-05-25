@@ -1,8 +1,11 @@
 class Event < ActiveRecord::Base
   include IceCube
+
+  belongs_to :user
+
   serialize :schedule, IceCube::Schedule
 
-  validates :title, :start_date, presence: true
+  validates :title, :start_date, :user_id, presence: true
 
   def schedule=(new_schedule)
     return unless RecurringSelect.is_valid_rule?(new_schedule)
