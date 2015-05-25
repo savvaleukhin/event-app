@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   devise_for :users
-  resources :events
+  resources :events do
+    get 'my', on: :collection
+  end
 
   root to: "events#index"
 

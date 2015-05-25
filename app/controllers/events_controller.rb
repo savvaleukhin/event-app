@@ -1,10 +1,15 @@
 class EventsController < ApplicationController
+  before_action :authenticate_user!, except: :index
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
   # GET /events
   # GET /events.json
   def index
-    @events = Event.all
+    @events = Event.all if user_signed_in?
+  end
+
+  def my
+    @events = Event.where(user_id: current_user.id)
   end
 
   # GET /events/1

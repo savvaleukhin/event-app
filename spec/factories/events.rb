@@ -1,4 +1,8 @@
 FactoryGirl.define do
+  sequence :title do |n|
+    "Title of event #{n}"
+  end
+
   factory :event do
     title "MyString"
     schedule nil
@@ -6,6 +10,10 @@ FactoryGirl.define do
 
     factory :event_with_user do
       user
+    end
+
+    factory :event_list do
+      title
     end
   end
 
