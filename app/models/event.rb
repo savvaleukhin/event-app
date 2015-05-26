@@ -8,10 +8,12 @@ class Event < ActiveRecord::Base
   serialize :schedule, Hash
 
   def schedule=(new_schedule)
+    return unless RecurringSelect.is_valid_rule?(new_schedule)
     write_attribute(:schedule, RecurringSelect.dirty_hash_to_rule(new_schedule).to_hash)
   end
 
   def converted_schedule
+    return nil if self.schedule == {}
     the_schedule = Schedule.new(self.start_date)
     the_schedule.add_recurrence_rule(RecurringSelect.dirty_hash_to_rule(self.schedule))
     the_schedule

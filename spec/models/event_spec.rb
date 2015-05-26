@@ -7,23 +7,30 @@ RSpec.describe Event, type: :model do
   it { should validate_presence_of :start_date }
   it { should validate_presence_of :user_id }
 
-  context 'schedule string' do
-    subject { build(:event, title: 'Title', start_date: '2015-05-05') }
+  context 'schedule and rule' do
+    let(:user) { create(:user) }
+    subject { build(:event, title: 'Title', start_date: '2015-05-05', user_id: user) }
 
-    it 'saves write schedule string' do
-      subject.schedule = '{"interval":1,
-                          "until":null,
-                          "count":null,
-                          "validations":null,
-                          "rule_type":"IceCube::DailyRule"}'
-      subject.save
-      expect(subject.schedule.to_s).to eq 'Daily'
+    context 'schedule string' do
+      it 'does not save wrong schedule string' do
+        subject.schedule = '123'
+        subject.save
+        expect(subject.schedule).to eq({})
+      end
     end
 
-    it 'does not save wrong schedule string' do
-      subject.schedule = '123'
-      subject.save
-      expect(subject.schedule).to eq nil
+    context 'converted_schedule' do
+      it 'convetes hash of IceCube rule to IceCube schedule' do
+        subject.schedule = {:validations=>{}, :rule_type=>"IceCube::DailyRule", :interval=>1}
+        subject.save
+        expect(subject.converted_schedule.to_s).to eq 'Daily'
+      end
+
+      it 'does not convert empty hash' do
+        subject.schedule = {}
+        subject.save
+        expect(subject.converted_schedule).to eq nil
+      end
     end
   end
 end
