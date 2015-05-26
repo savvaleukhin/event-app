@@ -39,7 +39,6 @@ gem "therubyracer"
 gem "less-rails"
 gem "twitter-bootstrap-rails"
 gem 'devise'
-gem 'puma'
 gem 'rails_12factor', group: :production
 
 group :development, :test do
