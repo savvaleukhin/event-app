@@ -12,6 +12,23 @@ class EventsController < ApplicationController
     @events = Event.where(user_id: current_user.id)
   end
 
+  def events_feed
+    result = []
+    events = Event.where("user_id = ? AND start_date <= ?", current_user.id, params['end'])
+    start_date = Date.parse(Time.parse(params['start']).utc.to_s)
+    end_date = Date.parse(Time.parse(params['end']).utc.to_s)
+
+    events.each do |event|
+      if event.schedule.occurs_between?(start_date, end_date)
+        event.schedule.occurrences_between(start_date, end_date).each do |instant|
+          result << {:id => event.id, :title => event.title, :start => instant, url: edit_event_url(event, format: :html)}
+        end
+      end
+    end
+
+    render :text => result.to_json
+  end
+
   # GET /events/1
   # GET /events/1.json
   def show

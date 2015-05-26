@@ -4,7 +4,7 @@
 
 showCalendar = (e) ->
   $('#calendar').fullCalendar({
-    events: '/events.json'
+    events: '/events/events_feed.json'
   })
 
 $(document).ready showCalendar

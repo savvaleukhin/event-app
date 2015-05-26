@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
   resources :events do
     get 'my', on: :collection
+    get 'events_feed', on: :collection
   end
 
   root to: "events#index"
